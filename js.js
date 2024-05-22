@@ -28,3 +28,15 @@ function fetchJSONdata(){
     .catch((error) => console.error("Unable to fetch data : ", error))
 }
 fetchJSONdata()
+
+function toggleCheckBox(id,e) {
+    const checkbox = document.getElementById(id);
+    const elemen = document.getElementById(e);
+
+    if (checkbox.checked) {
+        elemen.style.display = 'block';
+    } else {
+        elemen.style.display = 'none';
+    }
+  }
+
