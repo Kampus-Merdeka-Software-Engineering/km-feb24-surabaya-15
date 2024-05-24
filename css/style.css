@@ -181,27 +181,20 @@ footer {
 }
 
 
-.dropbtn {
-  background-color: #3498DB;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #2980B9;
-}
-
-
-.dropdown {
+.Statedropdown {
   position: relative;
   display: inline-block;
 }
 
+#StateSearch {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+}
 
-.dropdown-content {
+.state-dropdown-content {
   display: none;
   position: absolute;
   background-color: #f1f1f1;
@@ -210,18 +203,21 @@ footer {
   z-index: 1;
 }
 
-
-.dropdown-content a {
+.state-dropdown-content label {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
 
+.state-dropdown-content label:hover {
+  background-color: #ddd;
+}
 
-.dropdown-content a:hover {background-color: #ddd;}
+.show {
+  display: block;
+}
 
-.show {display:block;}
 
 .checkbox{
   display: none;

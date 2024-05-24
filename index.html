@@ -24,16 +24,18 @@
         
         <!---Sidebar--->
         <aside id="sidebar">Sidebar
-            <br>
-            <button onclick="dropdown()" class="dropbtn"> State </button>
-            <div class="dropdown">
-              <div id="Dropdown" class="dropdown-content">
-                <a href="#">California</a>
-                <a href="#">Alaska</a>
-                <a href="#">NYC</a>
+            <br><br>
+            <div class="Statedropdown">
+              <input type="text" placeholder="Search..." id="StateSearch" onkeyup="filterFunction()">
+              <div id="StatedropdownList" class="state-dropdown-content">
+                  <label><input type="checkbox" value="Option 1"> Option 1</label>
+                  <label><input type="checkbox" value="Option 2"> Option 2</label>
+                  <label><input type="checkbox" value="Option 3"> Option 3</label>
+                  <label><input type="checkbox" value="Option 4"> Option 4</label>
+                  <label><input type="checkbox" value="Option 5"> Option 5</label>
               </div>
             </div>
-            <br>
+            <br><br>
             <input type="checkbox" id="checkboxAll">Segment
             <br/>
             <input type="checkbox" class="chkboxname" id="checkbox1" onclick="toggleCheckBox('checkbox1', 'checkbox_1')"> Home Office
