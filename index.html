@@ -7,6 +7,7 @@
 
     <!---Link CSS--->
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="grid-container">
@@ -18,7 +19,7 @@
                 <li><a href="https://www.facebook.com">Contact</a></li>
                 <li><a href="https://www.kaggle.com/datasets/vivek468/superstore-dataset-final">About</a></li>  
                  </ul>
-              </nav>
+            </nav>
         </header>
         <!---end header + navbar--->
         
@@ -26,7 +27,7 @@
         <aside id="sidebar">Sidebar
             <br><br>
             <div class="Statedropdown">
-              <input type="text" placeholder="Search..." id="StateSearch" onkeyup="filterFunction()">
+              <input type="text" placeholder="State" id="StateSearch" onkeyup="filterFunction()">
               <div id="StatedropdownList" class="state-dropdown-content">
                   <label><input type="checkbox" value="Option 1"> Option 1</label>
                   <label><input type="checkbox" value="Option 2"> Option 2</label>
@@ -82,6 +83,11 @@
            </div>
            <div class= "content4">
              <p># Total Monthly Sales From 2014-2017</p> 
+              <label><input type="checkbox" id="year2014" checked> 2014</label>
+              <label><input type="checkbox" id="year2015" checked> 2015</label>
+              <label><input type="checkbox" id="year2016" checked> 2016</label>
+              <label><input type="checkbox" id="year2017" checked> 2017</label>
+              <canvas id="myChart" width="400" height="200"></canvas>
            </div>
            <div class="content5">
              <p># Sales by Category</p>
@@ -106,10 +112,10 @@
 
         <!---Footer--->
         <footer>
-            <h6>Created By Team 15 Section Surabaya</h6>
+            <h6 style="color: white;">Created By Team 15 Section Surabaya</h6>
         </footer>
         <!---end footer--->
     </div>
-<script src="js.js"></script>
+    <script src="js.js"></script>
 </body>
 </html>
