@@ -19,6 +19,8 @@ body {
 /*----------Header + Navbar----------*/
 header{
   background: royalblue;
+  width: 99%;
+  position: fixed;
   color: white;
   grid-area: header;
   display: flex;
@@ -63,6 +65,9 @@ h1{
 #sidebar {
   background: white;
   grid-area: sidebar;
+  top: 6.48%;
+  height: 100%;
+  position: fixed;
   margin-top: 0.3rem;
   margin-right: 1rem;
   color: black;
@@ -96,6 +101,7 @@ h1{
   grid-area: content1;
   text-align: left;
   padding-left: 5px;
+  margin-top: 42px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
@@ -104,6 +110,7 @@ h1{
   grid-area: content2;
   text-align: left;
   padding-left: 5px;
+  margin-top: 42px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
@@ -112,12 +119,14 @@ h1{
   grid-area: content3;
   text-align: left;
   padding-left: 5px;
+  margin-top: 42px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .content4{
   background: white ;
   grid-area: content4;
+  height: 100%;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
