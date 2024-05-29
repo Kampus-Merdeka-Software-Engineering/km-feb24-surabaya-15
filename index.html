@@ -10,105 +10,98 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="grid-container">
-        <!--- Header + Navbar --->
-        <header>
-            <h1>PERFORMANCE DASHBOARD</h1>
-            <nav class="navbar">
-                <ul>
-                <li><a href="https://www.facebook.com">Contact</a></li>
-                <li><a href="https://www.kaggle.com/datasets/vivek468/superstore-dataset-final">About</a></li>  
-                 </ul>
-            </nav>
-        </header>
-        <!---end header + navbar--->
-        
-        <!---Sidebar--->
-        <aside id="sidebar">Sidebar
-            <br><br>
+    <!---------------- Header + Navbar --------------->
+    <div class="container">
+      <header>
+        <h1>PERFORMANCE DASHBOARD</h1>
+        <nav>
+          <ul>
+            <li><a href="https://www.kaggle.com/datasets/vivek468/superstore-dataset-final">About</a></li>
+            <li><a href="https://www.facebook.com">Contact</a></li>
+          </ul>
+        </nav>
+      </header>
+      <!---end header + navbar--->
+      
+      <!---Sidebar--->
+      <div class="content-wrapper">
+        <aside id="sidebar">
+          <div class="sidebarcontainer">
+            <br>
             <div class="Statedropdown">
               <input type="text" placeholder="State" id="StateSearch" onkeyup="filterFunction()">
               <div id="StatedropdownList" class="state-dropdown-content">
-                  <label><input type="checkbox" value="Option 1"> NYC</label>
-                  <label><input type="checkbox" value="Option 2"> Washington</label>
-                  <label><input type="checkbox" value="Option 3"> Philadelphia</label>
-                  <label><input type="checkbox" value="Option 4"> Alaska</label>
-                  <label><input type="checkbox" value="Option 5"> Arizona</label>
+                <label><input type="checkbox" value="Option 1"> NYC</label>
+                <label><input type="checkbox" value="Option 2"> Washington</label>
+                <label><input type="checkbox" value="Option 3"> Philadelphia</label>
+                <label><input type="checkbox" value="Option 4"> Alaska</label>
+                <label><input type="checkbox" value="Option 5"> Arizona</label>
               </div>
             </div>
-            <br><br>
-            <input type="checkbox" id="checkboxAll">Segment
-            <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox1" onclick="toggleCheckBox('checkbox1', 'checkbox_1')"> Home Office
-            <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox2" onclick="toggleCheckBox('checkbox2', 'checkbox_2')"> Corporate
-            <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox3" onclick="toggleCheckBox('checkbox3', 'checkbox_3')"> Consumer
             <br/>
 
             <br>
-            <input type="checkbox" id="checkboxAll">Category
+            <div class="Categorydropdown">
+              <button class="categorydropbtn" onclick="toggleDropdown()">Category</button>
+              <div class="category-dropdown-content" id="dropdownList">
+                <div class="search-container">
+                  <input type="text" placeholder="Cari..." id="CategorysearchInput" oninput="searchFunction()">
+                  <button class="searchbutton" searchFunction()>Search</button>
+                </div>
+                <input type="checkbox" value="Option 1" onclick="confirmSelection(event)"> Technologi <br>
+                <input type="checkbox" value="Option 2" onclick="confirmSelection(event)"> Office Supplies <br>
+                <input type="checkbox" value="Option 3" onclick="confirmSelection(event)"> Furniture <br>
+              </div>
+            </div>
             <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox4" onclick="toggleCheckBox('checkbox4', 'checkbox_4')"> Technology
-            <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox5" onclick="toggleCheckBox('checkbox5', 'checkbox_5')"> Office Supplies
-            <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox6" onclick="toggleCheckBox('checkbox6', 'checkbox_6')"> Furniture
-            <br/>
-
-            <br>
-            <input type="checkbox" id="checkboxAll">Year
-            <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox7"> 2014
-            <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox8"> 2015
-            <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox9"> 2016
-            <br/>
-            <input type="checkbox" class="chkboxname" id="checkbox10"> 2017
-            <br/>
+          </div>
         </aside>
         <!---end sidebar--->
 
         <!---content--->
-        <main class="main-content">
-            <div class= "content1">
-             <p>Total Sales:</p> 
-           </div>
-            <div class= "content2">
-             <p>Total Profit:</p> 
-           </div>
-            <div class= "content3">
-             <p>Total Customer:</p> 
-           </div>
-           <div class= "content4">
-             <p># Total Monthly Sales From 2014-2017</p> 
+        <main>
+          <div class=" content content1">
+            <p>Sales</p>
+          </div>
+          <div class=" content content2">
+            <p>Total Profit</p>
+          </div>
+          <div class=" content content3">
+            <p>Total Customer</p>
+          </div>
+          <div class=" content content4">
+            <p># Total Monthly Sales From 2014-2017</p> 
               <label><input type="checkbox" id="year2014" checked> 2014</label>
               <label><input type="checkbox" id="year2015" checked> 2015</label>
               <label><input type="checkbox" id="year2016" checked> 2016</label>
               <label><input type="checkbox" id="year2017" checked> 2017</label>
               <canvas id="myChart" width="400" height="200"></canvas>
-           </div>
-           <div class="content5">
-             <p># Sales by Category</p>
-             <div id="checkbox_4" class="checkbox"> Home Office akan muncul disini</div>
-             <div id="checkbox_5" class="checkbox"> Home Office akan muncul disini</div>
-             <div id="checkbox_6" class="checkbox"> Home Office akan muncul disini</div>
-           </div>
-           <div class="content6">
-             <p># Sales by Subcategory</p>
-           </div>
-           <div class="content7">
-             <p># Top 10 Cities With the Most Sales</p>
-           </div>
-           <div class="content8">
-             <p># Profit by Segment</p>
-             <div id="checkbox_1" class="checkbox"> Home Office akan muncul disini</div>
-             <div id="checkbox_2" class="checkbox"> Home Office akan muncul disini</div>
-             <div id="checkbox_3" class="checkbox"> Home Office akan muncul disini</div>
-           </div>
-       </main>
-        <!---end content--->
+          </div>
+          <div class=" content content5">
+            <p># Sales by Category</p>
+            <canvas id="barchartc5" width="400" height="200"></canvas>
+            <div id="checkbox_4" class="checkbox"> Home Office akan muncul disini</div>
+            <div id="checkbox_5" class="checkbox"> Home Office akan muncul disini</div>
+            <div id="checkbox_6" class="checkbox"> Home Office akan muncul disini</div>
+          </div>
+          <div class=" content content6">
+            <p># Sales by Subcategory</p>
+            <canvas id="barchartc6" width="400" height="200"></canvas>
+          </div>
+          <div class=" content content7">
+            <p># Top 10 Cities With the Most Sales</p>
+            <canvas id="barchartc7" width="400" height="200"></canvas>
+          </div>
+          <div class=" content content8">
+            <p># Profit by Segment</p>
+            <canvas id="barchartc8" width="400" height="200"></canvas>
+            <div id="checkbox_1" class="checkbox"> Home Office akan muncul disini</div>
+            <div id="checkbox_2" class="checkbox"> Home Office akan muncul disini</div>
+            <div id="checkbox_3" class="checkbox"> Home Office akan muncul disini</div>
+          </div>
+        </main>
+      </div>
+      <!---end content--->
 
         <!---Footer--->
         <footer>

@@ -190,3 +190,273 @@ function toggleCheckBox(id,e) {
     updateChart();
 });
 
+//---------------- Sidebar dropdown category-------------------
+function toggleDropdown() {
+    var dropdownContent = document.querySelector('.category-dropdown-content');
+    dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+  }
+  
+  function confirmSelection(event) {
+    var checkbox = event.target;
+    var option = checkbox.value;
+     var confirmed = confirm("Apakah Anda yakin?");
+    if (confirmed) {
+      console.log('Pilihan ' + option + ' telah dikonfirmasi.');
+      
+    } else {
+      checkbox.checked = false; 
+    }
+  }
+  
+  function searchFunction() {
+    var input, filter, ul, li, checkboxes, label, txtValue;
+    input = document.getElementById("CategorysearchInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("dropdownList");
+    checkboxes = ul.querySelectorAll('input[type="checkbox"]');
+    
+    checkboxes.forEach(function(checkbox) {
+      label = checkbox.nextSibling; 
+      txtValue = label.textContent || label.innerText;
+      
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        label.style.display = ""; 
+      } else {
+        label.style.display = "none"; 
+      }
+    });
+}
+
+// -------------------content 1------------------------
+
+// -------------------content 2------------------------
+
+// -------------------content 3------------------------
+
+// -------------------content 5------------------------
+fetch('dataset.json')
+    .then(response => response.json())
+    .then(data => {
+        
+        const categorySales = data.reduce((acc, obj) => {
+            const Category = obj.Category;
+            const Sales = parseFloat(obj.Sales);
+            if (!acc[Category]) {
+                acc[Category] = 0;
+            }
+            acc[Category] += Sales;
+            return acc;
+        }, {});
+
+        
+        const categorySalesArray = Object.entries(categorySales);
+
+        
+        categorySalesArray.sort((a, b) => b[1] - a[1]);
+
+        
+        const labels = categorySalesArray.map(item => item[0]);
+        const sales = categorySalesArray.map(item => item[1]);
+
+        
+        const ctx = document.getElementById('barchartc5').getContext('2d');
+        const doughnutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Sales',
+                    data: sales,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching data:', error));
+
+// -------------------content 6------------------------
+fetch('dataset.json')
+    .then(response => response.json())
+    .then(data => {
+        
+        const salesSubcategory = data.reduce((acc, obj) => {
+            const Sales = parseFloat(obj.Sales);
+            const Sub_Category = obj.Sub_Category;
+            if (!acc[Sub_Category]) {
+                acc[Sub_Category] = 0;
+            }
+            acc[Sub_Category] += Sales;
+            return acc;
+        }, {});
+
+        
+        const salesSubcategoryArray = Object.entries(salesSubcategory);
+
+        
+        salesSubcategoryArray.sort((a, b) => b[1] - a[1]);
+
+        
+        const labels = salesSubcategoryArray.map(item => item[0]);
+        const sales = salesSubcategoryArray.map(item => item[1]);
+
+        
+        const ctx = document.getElementById('barchartc6').getContext('2d');
+        const barchartc6 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Sales',
+                    data: sales,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching data:', error));
+
+// -------------------content 7------------------------
+fetch('dataset.json')
+    .then(response => response.json())
+    .then(data => {
+        
+        const cityMostSales = data.reduce((acc, obj) => {
+            const Sales = parseFloat(obj.Sales);
+            const City = obj.City;
+            if (!acc[City]) {
+                acc[City] = 0;
+            }
+            acc[City] += Sales;
+            return acc;
+        }, {});
+
+        
+        const cityMostSalesArray = Object.entries(cityMostSales);
+
+        
+        cityMostSalesArray.sort((a, b) => b[1] - a[1]);
+
+        
+        const top10CitySalesArray = cityMostSalesArray.slice(0, 10);
+
+        
+        const labels = top10CitySalesArray.map(item => item[0]);
+        const sales = top10CitySalesArray.map(item => item[1]);
+
+        
+        const ctx = document.getElementById('barchartc7').getContext('2d');
+        const barchartc7 = new Chart(ctx, {
+            type: 'bar', 
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Sales',
+                    data: sales,
+                    backgroundColor: 'rgba(64, 224, 208, 0.2)', 
+                    borderColor: 'rgba(64, 224, 208, 1)',       
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y', 
+                scales: {
+                    x: { 
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching data:', error));
+
+// -------------------content 8------------------------
+
+fetch('dataset.json')
+    .then(response => response.json())
+    .then(data => {
+        
+        const segmentProfits = data.reduce((acc, obj) => {
+            const Segment = obj.Segment;
+            const Profit = parseFloat(obj.Profit);
+            if (!acc[Segment]) {
+                acc[Segment] = 0;
+            }
+            acc[Segment] += Profit;
+            return acc;
+        }, {});
+
+        
+        const segmentProfitsArray = Object.entries(segmentProfits);
+
+       
+        segmentProfitsArray.sort((a, b) => b[1] - a[1]);
+
+        
+        const labels = segmentProfitsArray.map(item => item[0]);
+        const profits = segmentProfitsArray.map(item => item[1]);
+
+        
+        const ctx = document.getElementById('barchartc8').getContext('2d');
+        const barchartc8 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Profit',
+                    data: profits,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching data:', error));
+
