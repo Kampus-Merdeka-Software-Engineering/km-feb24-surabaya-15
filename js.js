@@ -1,3 +1,27 @@
+// -----------Modal-----------
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('modal');
+    modal.style.display = 'block';
+  });
+  const modalCloseButton = document.querySelector('.modal-close');
+  modalCloseButton.addEventListener('click', function() {
+    const modal = document.getElementById('modal');
+    modal.style.display = 'none';
+  });
+    
+const modal = document.getElementById('modal');
+modal.style.opacity = 0;
+modal.style.transition = 'opacity 0.5s ease-in-out';
+
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('modal');
+  modal.style.display = 'block';
+  setTimeout(function() {
+    modal.style.opacity = 1;
+  }, 50);
+});
+// -----------------------------
+
 document.getElementById('StateSearch').addEventListener('click', function(event) {
   document.getElementById('StatedropdownList').classList.toggle('show');
   event.stopPropagation(); // Prevent the event from bubbling up to the window click listener
@@ -19,12 +43,10 @@ function filterFunction() {
   }
 }
 
-// Prevent the dropdown from closing when clicking inside it
 document.getElementById('StatedropdownList').addEventListener('click', function(event) {
   event.stopPropagation();
 });
 
-// Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
   if (!event.target.matches('#StateSearch')) {
       var dropdowns = document.getElementsByClassName('state-dropdown-content');
@@ -37,86 +59,91 @@ window.onclick = function(event) {
   }
 }
 
-
-function fetchJSONdata(){
-    fetch("dataset.json")
-    .then((res) =>{
-        if (!res.ok) {
-          throw new error(`HTTP Error! Status: ${res.status}`)
-        }
-        return res.json();
-    })
-    .then((data) => console.log(data))
-    .catch((error) => console.error("Unable to fetch data : ", error))
+// Bagian JS untuk Menu Dropdown State dan Datatable
+async function fetchData() {
+    const response = await fetch('dataset.json'); 
+    const data = await response.json();
+    
+    // Extract unique states from the data
+    const states = new Set(data.map(item => item.State)); 
+    const categories = new Set(data.map(item => item.Category));
+  
+    return { data, states, categories }; 
 }
-fetchJSONdata()
 
-function toggleCheckBox(id,e) {
-    const checkbox = document.getElementById(id);
-    const elemen = document.getElementById(e);
+async function initDataTable() {
+    const { data } = await fetchData(); // Destructure data from the result of fetchData
+  
+    $(document).ready(function() {
+        $('#your_table_id').DataTable({
+            data: data,
+            columns: [
+                { data: 'Row_ID', width: '5%' }, 
+                { data: 'Order_ID', width: '5%' },
+                { data: 'Order_Date', width: '7%' },
+                { data: 'Ship_Date', width: '7%' },
+                { data: 'Ship_Mode', width: '7%' },
+                { data: 'Customer_ID', width: '5%' },
+                { data: 'Customer_Name', width: '10%' },
+                { data: 'Segment', width: '7%' },
+                { data: 'Country', width: '7%' },
+                { data: 'City', width: '7%' },
+                { data: 'State', width: '7%' },
+                { data: 'Postal_Code', width: '5%' },
+                { data: 'Region', width: '7%' },
+                { data: 'Product_ID', width: '7%' },
+                { data: 'Category', width: '7%' },
+                { data: 'Sub_Category', width: '7%' },
+                { data: 'Product_Name', width: '10%' },
+                { data: 'Sales', width: '7%' },
+                { data: 'Quantity', width: '5%' },
+                { data: 'Discount', width: '5%' },
+                { data: 'Profit', width: '7%' }
+                // ... add more columns as needed
+            ],
+            scrollX: true, // Enable horizontal scrolling
+            autoWidth: false // Disable automatic column width calculation
+        });
+    });
+}
 
-    if (checkbox.checked) {
-        elemen.style.display = 'block';
-    } else {
-        elemen.style.display = 'none';
-    }
-  }
+initDataTable();
+// ---------------------------------
 
-  document.addEventListener('DOMContentLoaded', function() {
-    // Data penjualan dalam format JSON
-    const salesData = [
-        { "Order_Date": "2014-01-15", "Sales": 150 },
-        { "Order_Date": "2014-02-15", "Sales": 200 },
-        { "Order_Date": "2014-03-15", "Sales": 250 },
-        { "Order_Date": "2014-04-15", "Sales": 300 },
-        { "Order_Date": "2014-05-15", "Sales": 350 },
-        { "Order_Date": "2014-06-15", "Sales": 400 },
-        { "Order_Date": "2014-07-15", "Sales": 450 },
-        { "Order_Date": "2014-08-15", "Sales": 500 },
-        { "Order_Date": "2014-09-15", "Sales": 550 },
-        { "Order_Date": "2014-10-15", "Sales": 600 },
-        { "Order_Date": "2014-11-15", "Sales": 650 },
-        { "Order_Date": "2014-12-15", "Sales": 700 },
-        { "Order_Date": "2015-01-15", "Sales": 750 },
-        { "Order_Date": "2015-02-15", "Sales": 800 },
-        { "Order_Date": "2015-03-15", "Sales": 850 },
-        { "Order_Date": "2015-04-15", "Sales": 900 },
-        { "Order_Date": "2015-05-15", "Sales": 950 },
-        { "Order_Date": "2015-06-15", "Sales": 1000 },
-        { "Order_Date": "2015-07-15", "Sales": 1050 },
-        { "Order_Date": "2015-08-15", "Sales": 1100 },
-        { "Order_Date": "2015-09-15", "Sales": 1150 },
-        { "Order_Date": "2015-10-15", "Sales": 1200 },
-        { "Order_Date": "2015-11-15", "Sales": 1250 },
-        { "Order_Date": "2015-12-15", "Sales": 1300 },
-        { "Order_Date": "2016-01-15", "Sales": 1350 },
-        { "Order_Date": "2016-02-15", "Sales": 1400 },
-        { "Order_Date": "2016-03-15", "Sales": 1450 },
-        { "Order_Date": "2016-04-15", "Sales": 1500 },
-        { "Order_Date": "2016-05-15", "Sales": 1550 },
-        { "Order_Date": "2016-06-15", "Sales": 1600 },
-        { "Order_Date": "2016-07-15", "Sales": 1650 },
-        { "Order_Date": "2016-08-15", "Sales": 1700 },
-        { "Order_Date": "2016-09-15", "Sales": 1750 },
-        { "Order_Date": "2016-10-15", "Sales": 1800 },
-        { "Order_Date": "2016-11-15", "Sales": 1850 },
-        { "Order_Date": "2016-12-15", "Sales": 1900 },
-        { "Order_Date": "2017-01-15", "Sales": 1950 },
-        { "Order_Date": "2017-02-15", "Sales": 2000 },
-        { "Order_Date": "2017-03-15", "Sales": 2050 },
-        { "Order_Date": "2017-04-15", "Sales": 2100 },
-        { "Order_Date": "2017-05-15", "Sales": 2150 },
-        { "Order_Date": "2017-06-15", "Sales": 2200 },
-        { "Order_Date": "2017-07-15", "Sales": 2250 },
-        { "Order_Date": "2017-08-15", "Sales": 2300 },
-        { "Order_Date": "2017-09-15", "Sales": 2350 },
-        { "Order_Date": "2017-10-15", "Sales": 2400 },
-        { "Order_Date": "2017-11-15", "Sales": 2450 },
-        { "Order_Date": "2017-12-15", "Sales": 2500 }
-    ];
+document.addEventListener('DOMContentLoaded', async function() {
+    const { data, states } = await fetchData(); 
+  
+    const stateDropdownList = document.getElementById('StatedropdownList');
+    states.forEach(state => {
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = true;
+        checkbox.value = state;
+        label.textContent = state;
+        label.appendChild(checkbox);
+        stateDropdownList.appendChild(label);
 
+        checkbox.addEventListener('change', updateChart);  // Add event listener for state checkboxes
+    });
+
+    // Add event listener for year checkboxes
+    const yearCheckboxes = document.querySelectorAll('.content4 input[type="checkbox"]');
+    yearCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateChart);
+    });
+
+    const categoryCheckboxes = document.querySelectorAll('#dropdownList input[type="checkbox"]');
+    categoryCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateChart);
+    });
+
+    initChart1(data);
+});
+
+function initChart1(data) {
     const ctx = document.getElementById('myChart').getContext('2d');
-    let myChart = new Chart(ctx, {
+    window.myChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: [],
@@ -148,47 +175,55 @@ function toggleCheckBox(id,e) {
         }
     });
 
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateChart);
+    window.salesData = data.sort((a, b) => new Date(a.Order_Date) - new Date(b.Order_Date));
+    window.categoryData = new Set(data.map(item => item.Category));
+    updateChart();
+}
+
+function updateChart() {
+    const stateCheckboxes = document.querySelectorAll('#StatedropdownList input[type="checkbox"]');
+    const selectedStates = Array.from(stateCheckboxes)
+                                .filter(checkbox => checkbox.checked)
+                                .map(checkbox => checkbox.value);
+
+    const yearCheckboxes = document.querySelectorAll('.content4 input[type="checkbox"]');
+    const selectedYears = Array.from(yearCheckboxes)
+                               .filter(checkbox => checkbox.checked)
+                               .map(checkbox => checkbox.id.replace('year', ''));
+
+    const selectedCategories = Array.from(document.querySelectorAll('#dropdownList input[type="checkbox"]:checked'))
+                               .map(checkbox => checkbox.value);
+
+    const monthlySales = [];
+    const monthYearLabels = [];
+
+    window.salesData.forEach(data => {
+        const date = new Date(data.Order_Date);
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
+            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+            const monthYear = `${getMonthName(month)} ${year}`;
+            if (!monthYearLabels.includes(monthYear)) {
+                monthYearLabels.push(monthYear);
+                monthlySales.push(0);
+            }
+            const index = monthYearLabels.indexOf(monthYear);
+            monthlySales[index] += parseFloat(data.Sales); // Ensure Sales is treated as a number
+        }
     });
 
-    function updateChart() {
-        const selectedYears = Array.from(checkboxes)
-                                   .filter(checkbox => checkbox.checked)
-                                   .map(checkbox => checkbox.id.replace('year', ''));
+    window.myChart.data.labels = monthYearLabels;
+    window.myChart.data.datasets[0].data = monthlySales;
+    window.myChart.update();
+}
 
-        const monthlySales = [];
-        const monthYearLabels = [];
+function getMonthName(monthIndex) {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return monthNames[monthIndex];
+}
 
-        salesData.forEach(data => {
-            const date = new Date(data.Order_Date);
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            if (selectedYears.includes(year.toString())) {
-                const monthYear = `${getMonthName(month)} ${year}`;
-                if (!monthYearLabels.includes(monthYear)) {
-                    monthYearLabels.push(monthYear);
-                    monthlySales.push(0);
-                }
-                const index = monthYearLabels.indexOf(monthYear);
-                monthlySales[index] += data.Sales;
-            }
-        });
 
-        myChart.data.labels = monthYearLabels;
-        myChart.data.datasets[0].data = monthlySales;
-        myChart.update();
-    }
-
-    function getMonthName(monthIndex) {
-        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        return monthNames[monthIndex];
-    }
-
-    // Panggil updateChart saat pertama kali untuk menampilkan data awal
-    updateChart();
-});
 
 //---------------- Sidebar dropdown category-------------------
 function toggleDropdown() {
@@ -202,7 +237,6 @@ function toggleDropdown() {
      var confirmed = confirm("Apakah Anda yakin?");
     if (confirmed) {
       console.log('Pilihan ' + option + ' telah dikonfirmasi.');
-      
     } else {
       checkbox.checked = false; 
     }

@@ -8,6 +8,38 @@ body {
   font-family: Arial, sans-serif;
 }
 
+/* -----------Modal--------------- */
+#modal {
+  display: none;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modal-close {
+  float: right;
+  cursor: pointer;
+}
+  
+
 .container {
   display: flex;
   flex-direction: column;
@@ -19,6 +51,8 @@ header {
   background-color: royalblue;
   color: white;
   display: flex;
+  position: fixed;
+  width: 100%;
   justify-content: space-between;
   padding: 1rem;
   align-items: center;
@@ -70,6 +104,8 @@ aside {
 }
 
 .sidebarcontainer {
+  position: fixed;
+  top: 80px;
   background: white;
   margin-top: 0.3rem;
   margin-right: 1rem;
@@ -99,6 +135,7 @@ aside {
   position: absolute;
   background-color: #f1f1f1;
   min-width: 160px;
+  padding: 20px;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
@@ -124,6 +161,7 @@ button {
 main {
   background-color: #fff;
   padding: 1rem;
+  margin-top: 80px;
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -132,7 +170,8 @@ main {
     "content1 content2 content3"
     "content4 content4 content4"
     "content5 content6 content6"
-    "content7 content7 content8";
+    "content7 content7 content8"
+    "content9 content9 content9";
   gap: 1rem;
 }
 
@@ -173,6 +212,10 @@ main {
 
 .content8 {
   grid-area: content8;
+}
+
+.content9 {
+  grid-area: content9;
 }
 
 /*----------footer----------*/
@@ -280,6 +323,7 @@ footer {
   position: absolute;
   background-color: #f1f1f1;
   min-width: 160px;
+  padding: 10px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
 }
@@ -296,7 +340,9 @@ footer {
 }
 
 .show {
-  display: block;
+  display: block; /* Show the content when open */
+  max-height: 300px; /* Set maximum height for scrolling */
+  overflow-y: auto; /* Enable vertical scroll */
 }
 
 
