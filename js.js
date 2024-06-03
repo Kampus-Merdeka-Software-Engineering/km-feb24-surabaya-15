@@ -113,19 +113,19 @@ initDataTable();
 document.addEventListener('DOMContentLoaded', async function() {
     const {data} = await fetchData();
 
-    // Calculate total sales, total profit, and total customer
-    let totalSales = 0;
+    // Menghitung total sales, total profit, and total customer
+    let totalSales = new Set();
     let totalProfit = 0;
     let totalCustomer = new Set();
 
     data.forEach(item => {
-        totalSales += parseFloat(item.Sales);
+        totalSales.add(item.Row_ID);
         totalProfit += parseFloat(item.Profit);
         totalCustomer.add(item.Customer_ID);
     });
 
     // Display the totals in the HTML
-    document.getElementById('totalSales').textContent = totalSales.toLocaleString();
+    document.getElementById('totalSales').textContent = totalSales.size;
     document.getElementById('totalProfit').textContent = totalProfit.toLocaleString();
     document.getElementById('totalCustomer').textContent = totalCustomer.size;
 });
