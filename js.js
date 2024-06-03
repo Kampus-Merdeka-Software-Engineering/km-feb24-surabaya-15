@@ -111,6 +111,26 @@ initDataTable();
 // ---------------------------------
 
 document.addEventListener('DOMContentLoaded', async function() {
+    const {data} = await fetchData();
+
+    // Calculate total sales, total profit, and total customer
+    let totalSales = 0;
+    let totalProfit = 0;
+    let totalCustomer = new Set();
+
+    data.forEach(item => {
+        totalSales += parseFloat(item.Sales);
+        totalProfit += parseFloat(item.Profit);
+        totalCustomer.add(item.Customer_ID);
+    });
+
+    // Display the totals in the HTML
+    document.getElementById('totalSales').textContent = totalSales.toLocaleString();
+    document.getElementById('totalProfit').textContent = totalProfit.toLocaleString();
+    document.getElementById('totalCustomer').textContent = totalCustomer.size;
+});
+
+document.addEventListener('DOMContentLoaded', async function() {
     const { data, states } = await fetchData(); 
   
     const stateDropdownList = document.getElementById('StatedropdownList');
