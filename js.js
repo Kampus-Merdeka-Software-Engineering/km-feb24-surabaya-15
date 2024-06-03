@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 document.addEventListener('DOMContentLoaded', async function() {
-    const { data, states } = await fetchData(); 
+    const { data, states, categories } = await fetchData(); 
   
     const stateDropdownList = document.getElementById('StatedropdownList');
     states.forEach(state => {
@@ -144,21 +144,22 @@ document.addEventListener('DOMContentLoaded', async function() {
         label.appendChild(checkbox);
         stateDropdownList.appendChild(label);
 
-        checkbox.addEventListener('change', updateChart);  // Add event listener for state checkboxes
+        checkbox.addEventListener('change', updateCharts);  // Add event listener for state checkboxes
     });
 
     // Add event listener for year checkboxes
     const yearCheckboxes = document.querySelectorAll('.content4 input[type="checkbox"]');
     yearCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateChart);
+        checkbox.addEventListener('change', updateCharts);
     });
 
     const categoryCheckboxes = document.querySelectorAll('#dropdownList input[type="checkbox"]');
     categoryCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateChart);
+    checkbox.addEventListener('change', updateCharts);
     });
 
     initChart1(data);
+    initChart2(data);
 });
 
 function initChart1(data) {
@@ -197,10 +198,59 @@ function initChart1(data) {
 
     window.salesData = data.sort((a, b) => new Date(a.Order_Date) - new Date(b.Order_Date));
     window.categoryData = new Set(data.map(item => item.Category));
-    updateChart();
+    updateCharts();
 }
 
-function updateChart() {
+function initChart2(data) {
+    const ctx = document.getElementById('barchartc5').getContext('2d');
+    window.doughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Total Sales',
+                data: [],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    updateCharts();
+}
+
+
+function updateCharts() {
     const stateCheckboxes = document.querySelectorAll('#StatedropdownList input[type="checkbox"]');
     const selectedStates = Array.from(stateCheckboxes)
                                 .filter(checkbox => checkbox.checked)
@@ -214,6 +264,13 @@ function updateChart() {
     const selectedCategories = Array.from(document.querySelectorAll('#dropdownList input[type="checkbox"]:checked'))
                                .map(checkbox => checkbox.value);
 
+    updateLineChart(selectedStates, selectedYears, selectedCategories);
+    if (window.doughnutChart) {
+        updateDoughnutChart(selectedStates, selectedYears, selectedCategories);
+    }
+}
+
+function updateLineChart(selectedStates, selectedYears, selectedCategories) {
     const monthlySales = [];
     const monthYearLabels = [];
 
@@ -236,6 +293,35 @@ function updateChart() {
     window.myChart.data.labels = monthYearLabels;
     window.myChart.data.datasets[0].data = monthlySales;
     window.myChart.update();
+}
+
+function updateDoughnutChart(selectedStates, selectedYears, selectedCategories) {
+    const categorySales = {};
+
+    window.salesData.forEach(data => {
+        const date = new Date(data.Order_Date);
+        const year = date.getFullYear();
+        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
+            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+            const Category = data.Category;
+            const Sales = parseFloat(data.Sales);
+            if (!categorySales[Category]) {
+                categorySales[Category] = 0;
+            }
+            categorySales[Category] += Sales;
+        }
+    });
+
+    const categorySalesArray = Object.entries(categorySales);
+
+    categorySalesArray.sort((a, b) => b[1] - a[1]);
+
+    const labels = categorySalesArray.map(item => item[0]);
+    const sales = categorySalesArray.map(item => item[1]);
+
+    window.doughnutChart.data.labels = labels;
+    window.doughnutChart.data.datasets[0].data = sales;
+    window.doughnutChart.update();
 }
 
 function getMonthName(monthIndex) {
@@ -288,76 +374,76 @@ function toggleDropdown() {
 // -------------------content 3------------------------
 
 // -------------------content 5------------------------
-fetch('dataset.json')
-    .then(response => response.json())
-    .then(data => {
+// fetch('dataset.json')
+//     .then(response => response.json())
+//     .then(data => {
         
-        const categorySales = data.reduce((acc, obj) => {
-            const Category = obj.Category;
-            const Sales = parseFloat(obj.Sales);
-            if (!acc[Category]) {
-                acc[Category] = 0;
-            }
-            acc[Category] += Sales;
-            return acc;
-        }, {});
+//         const categorySales = data.reduce((acc, obj) => {
+//             const Category = obj.Category;
+//             const Sales = parseFloat(obj.Sales);
+//             if (!acc[Category]) {
+//                 acc[Category] = 0;
+//             }
+//             acc[Category] += Sales;
+//             return acc;
+//         }, {});
 
         
-        const categorySalesArray = Object.entries(categorySales);
+//         const categorySalesArray = Object.entries(categorySales);
 
         
-        categorySalesArray.sort((a, b) => b[1] - a[1]);
+//         categorySalesArray.sort((a, b) => b[1] - a[1]);
 
         
-        const labels = categorySalesArray.map(item => item[0]);
-        const sales = categorySalesArray.map(item => item[1]);
+//         const labels = categorySalesArray.map(item => item[0]);
+//         const sales = categorySalesArray.map(item => item[1]);
 
         
-        const ctx = document.getElementById('barchartc5').getContext('2d');
-        const doughnutChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Sales',
-                    data: sales,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    })
-    .catch(error => console.error('Error fetching data:', error));
+//         const ctx = document.getElementById('barchartc5').getContext('2d');
+//         const doughnutChart = new Chart(ctx, {
+//             type: 'doughnut',
+//             data: {
+//                 labels: labels,
+//                 datasets: [{
+//                     label: 'Total Sales',
+//                     data: sales,
+//                     backgroundColor: [
+//                         'rgba(255, 99, 132, 0.2)',
+//                         'rgba(54, 162, 235, 0.2)',
+//                         'rgba(255, 206, 86, 0.2)',
+//                         'rgba(75, 192, 192, 0.2)',
+//                         'rgba(153, 102, 255, 0.2)',
+//                         'rgba(255, 159, 64, 0.2)'
+//                     ],
+//                     borderColor: [
+//                         'rgba(255, 99, 132, 1)',
+//                         'rgba(54, 162, 235, 1)',
+//                         'rgba(255, 206, 86, 1)',
+//                         'rgba(75, 192, 192, 1)',
+//                         'rgba(153, 102, 255, 1)',
+//                         'rgba(255, 159, 64, 1)'
+//                     ],
+//                     borderWidth: 1
+//                 }]
+//             },
+//             options: {
+//                 responsive: true,
+//                 plugins: {
+//                     legend: {
+//                         position: 'top',
+//                     },
+//                     tooltip: {
+//                         callbacks: {
+//                             label: function(tooltipItem) {
+//                                 return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString();
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         });
+//     })
+//     .catch(error => console.error('Error fetching data:', error));
 
 // -------------------content 6------------------------
 fetch('dataset.json')
