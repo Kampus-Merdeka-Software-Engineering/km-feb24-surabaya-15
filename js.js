@@ -160,6 +160,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     initChart1(data);
     initChart2(data);
+    initChart3(data);
 });
 
 function initChart1(data) {
@@ -249,6 +250,32 @@ function initChart2(data) {
     updateCharts();
 }
 
+function initChart3(data) {
+    const ctx = document.getElementById('barchartc6').getContext('2d');
+    window.barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Total Sales',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    updateCharts();
+}
+
 
 function updateCharts() {
     const stateCheckboxes = document.querySelectorAll('#StatedropdownList input[type="checkbox"]');
@@ -267,6 +294,9 @@ function updateCharts() {
     updateLineChart(selectedStates, selectedYears, selectedCategories);
     if (window.doughnutChart) {
         updateDoughnutChart(selectedStates, selectedYears, selectedCategories);
+    }
+    if (window.barChart) {
+        updateBarChart(selectedStates, selectedYears, selectedCategories);
     }
 }
 
@@ -322,6 +352,35 @@ function updateDoughnutChart(selectedStates, selectedYears, selectedCategories) 
     window.doughnutChart.data.labels = labels;
     window.doughnutChart.data.datasets[0].data = sales;
     window.doughnutChart.update();
+}
+
+function updateBarChart(selectedStates, selectedYears, selectedCategories) {
+    const salesSubcategory = {};
+
+    window.salesData.forEach(data => {
+        const date = new Date(data.Order_Date);
+        const year = date.getFullYear();
+        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
+            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+            const Sub_Category = data.Sub_Category;
+            const Sales = parseFloat(data.Sales);
+            if (!salesSubcategory[Sub_Category]) {
+                salesSubcategory[Sub_Category] = 0;
+            }
+            salesSubcategory[Sub_Category] += Sales;
+        }
+    });
+
+    const salesSubcategoryArray = Object.entries(salesSubcategory);
+
+    salesSubcategoryArray.sort((a, b) => b[1] - a[1]);
+
+    const labels = salesSubcategoryArray.map(item => item[0]);
+    const sales = salesSubcategoryArray.map(item => item[1]);
+
+    window.barChart.data.labels = labels;
+    window.barChart.data.datasets[0].data = sales;
+    window.barChart.update();
 }
 
 function getMonthName(monthIndex) {
@@ -446,54 +505,54 @@ function toggleDropdown() {
 //     .catch(error => console.error('Error fetching data:', error));
 
 // -------------------content 6------------------------
-fetch('dataset.json')
-    .then(response => response.json())
-    .then(data => {
+// fetch('dataset.json')
+//     .then(response => response.json())
+//     .then(data => {
         
-        const salesSubcategory = data.reduce((acc, obj) => {
-            const Sales = parseFloat(obj.Sales);
-            const Sub_Category = obj.Sub_Category;
-            if (!acc[Sub_Category]) {
-                acc[Sub_Category] = 0;
-            }
-            acc[Sub_Category] += Sales;
-            return acc;
-        }, {});
+//         const salesSubcategory = data.reduce((acc, obj) => {
+//             const Sales = parseFloat(obj.Sales);
+//             const Sub_Category = obj.Sub_Category;
+//             if (!acc[Sub_Category]) {
+//                 acc[Sub_Category] = 0;
+//             }
+//             acc[Sub_Category] += Sales;
+//             return acc;
+//         }, {});
 
         
-        const salesSubcategoryArray = Object.entries(salesSubcategory);
+//         const salesSubcategoryArray = Object.entries(salesSubcategory);
 
         
-        salesSubcategoryArray.sort((a, b) => b[1] - a[1]);
+//         salesSubcategoryArray.sort((a, b) => b[1] - a[1]);
 
         
-        const labels = salesSubcategoryArray.map(item => item[0]);
-        const sales = salesSubcategoryArray.map(item => item[1]);
+//         const labels = salesSubcategoryArray.map(item => item[0]);
+//         const sales = salesSubcategoryArray.map(item => item[1]);
 
         
-        const ctx = document.getElementById('barchartc6').getContext('2d');
-        const barchartc6 = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Sales',
-                    data: sales,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    })
-    .catch(error => console.error('Error fetching data:', error));
+//         const ctx = document.getElementById('barchartc6').getContext('2d');
+//         const barchartc6 = new Chart(ctx, {
+//             type: 'bar',
+//             data: {
+//                 labels: labels,
+//                 datasets: [{
+//                     label: 'Total Sales',
+//                     data: sales,
+//                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
+//                     borderColor: 'rgba(75, 192, 192, 1)',
+//                     borderWidth: 1
+//                 }]
+//             },
+//             options: {
+//                 scales: {
+//                     y: {
+//                         beginAtZero: true
+//                     }
+//                 }
+//             }
+//         });
+//     })
+//     .catch(error => console.error('Error fetching data:', error));
 
 // -------------------content 7------------------------
 fetch('dataset.json')
