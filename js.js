@@ -161,6 +161,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     initChart1(data);
     initChart2(data);
     initChart3(data);
+    initChart4(data);
 });
 
 function initChart1(data) {
@@ -276,6 +277,33 @@ function initChart3(data) {
     updateCharts();
 }
 
+function initChart4(data) {
+    const ctx = document.getElementById('barchartc7').getContext('2d');
+    window.cityChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Total Sales',
+                data: [],
+                backgroundColor: 'rgba(64, 224, 208, 0.2)', 
+                borderColor: 'rgba(64, 224, 208, 1)',       
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y', 
+            scales: {
+                x: { 
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    updateCharts();
+}
+
 
 function updateCharts() {
     const stateCheckboxes = document.querySelectorAll('#StatedropdownList input[type="checkbox"]');
@@ -297,6 +325,9 @@ function updateCharts() {
     }
     if (window.barChart) {
         updateBarChart(selectedStates, selectedYears, selectedCategories);
+    }
+    if (window.cityChart) {
+        updateCityChart(selectedStates, selectedYears, selectedCategories);
     }
 }
 
@@ -381,6 +412,37 @@ function updateBarChart(selectedStates, selectedYears, selectedCategories) {
     window.barChart.data.labels = labels;
     window.barChart.data.datasets[0].data = sales;
     window.barChart.update();
+}
+
+function updateCityChart(selectedStates, selectedYears, selectedCategories) {
+    const citySales = {};
+
+    window.salesData.forEach(data => {
+        const date = new Date(data.Order_Date);
+        const year = date.getFullYear();
+        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
+            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+            const City = data.City;
+            const Sales = parseFloat(data.Sales);
+            if (!citySales[City]) {
+                citySales[City] = 0;
+            }
+            citySales[City] += Sales;
+        }
+    });
+
+    const citySalesArray = Object.entries(citySales);
+
+    citySalesArray.sort((a, b) => b[1] - a[1]);
+
+    const top10CitySalesArray = citySalesArray.slice(0, 10);
+
+    const labels = top10CitySalesArray.map(item => item[0]);
+    const sales = top10CitySalesArray.map(item => item[1]);
+
+    window.cityChart.data.labels = labels;
+    window.cityChart.data.datasets[0].data = sales;
+    window.cityChart.update();
 }
 
 function getMonthName(monthIndex) {
@@ -555,58 +617,58 @@ function toggleDropdown() {
 //     .catch(error => console.error('Error fetching data:', error));
 
 // -------------------content 7------------------------
-fetch('dataset.json')
-    .then(response => response.json())
-    .then(data => {
+// fetch('dataset.json')
+//     .then(response => response.json())
+//     .then(data => {
         
-        const cityMostSales = data.reduce((acc, obj) => {
-            const Sales = parseFloat(obj.Sales);
-            const City = obj.City;
-            if (!acc[City]) {
-                acc[City] = 0;
-            }
-            acc[City] += Sales;
-            return acc;
-        }, {});
+//         const cityMostSales = data.reduce((acc, obj) => {
+//             const Sales = parseFloat(obj.Sales);
+//             const City = obj.City;
+//             if (!acc[City]) {
+//                 acc[City] = 0;
+//             }
+//             acc[City] += Sales;
+//             return acc;
+//         }, {});
 
         
-        const cityMostSalesArray = Object.entries(cityMostSales);
+//         const cityMostSalesArray = Object.entries(cityMostSales);
 
         
-        cityMostSalesArray.sort((a, b) => b[1] - a[1]);
+//         cityMostSalesArray.sort((a, b) => b[1] - a[1]);
 
         
-        const top10CitySalesArray = cityMostSalesArray.slice(0, 10);
+//         const top10CitySalesArray = cityMostSalesArray.slice(0, 10);
 
         
-        const labels = top10CitySalesArray.map(item => item[0]);
-        const sales = top10CitySalesArray.map(item => item[1]);
+//         const labels = top10CitySalesArray.map(item => item[0]);
+//         const sales = top10CitySalesArray.map(item => item[1]);
 
         
-        const ctx = document.getElementById('barchartc7').getContext('2d');
-        const barchartc7 = new Chart(ctx, {
-            type: 'bar', 
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Sales',
-                    data: sales,
-                    backgroundColor: 'rgba(64, 224, 208, 0.2)', 
-                    borderColor: 'rgba(64, 224, 208, 1)',       
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                indexAxis: 'y', 
-                scales: {
-                    x: { 
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    })
-    .catch(error => console.error('Error fetching data:', error));
+//         const ctx = document.getElementById('barchartc7').getContext('2d');
+//         const barchartc7 = new Chart(ctx, {
+//             type: 'bar', 
+//             data: {
+//                 labels: labels,
+//                 datasets: [{
+//                     label: 'Total Sales',
+//                     data: sales,
+//                     backgroundColor: 'rgba(64, 224, 208, 0.2)', 
+//                     borderColor: 'rgba(64, 224, 208, 1)',       
+//                     borderWidth: 1
+//                 }]
+//             },
+//             options: {
+//                 indexAxis: 'y', 
+//                 scales: {
+//                     x: { 
+//                         beginAtZero: true
+//                     }
+//                 }
+//             }
+//         });
+//     })
+//     .catch(error => console.error('Error fetching data:', error));
 
 // -------------------content 8------------------------
 
