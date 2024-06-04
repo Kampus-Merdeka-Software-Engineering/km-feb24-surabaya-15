@@ -162,6 +162,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     initChart2(data);
     initChart3(data);
     initChart4(data);
+    initChart5(data);
 });
 
 function initChart1(data) {
@@ -304,6 +305,32 @@ function initChart4(data) {
     updateCharts();
 }
 
+function initChart5(data) {
+    const ctx = document.getElementById('barchartc8').getContext('2d');
+    window.segmentChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Total Profit',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    updateCharts();
+}
+
 
 function updateCharts() {
     const stateCheckboxes = document.querySelectorAll('#StatedropdownList input[type="checkbox"]');
@@ -328,6 +355,9 @@ function updateCharts() {
     }
     if (window.cityChart) {
         updateCityChart(selectedStates, selectedYears, selectedCategories);
+    }
+    if (window.segmentChart) {
+        updateSegmentChart(selectedStates, selectedYears, selectedCategories);
     }
 }
 
@@ -444,6 +474,36 @@ function updateCityChart(selectedStates, selectedYears, selectedCategories) {
     window.cityChart.data.datasets[0].data = sales;
     window.cityChart.update();
 }
+
+function updateSegmentChart(selectedStates, selectedYears, selectedCategories) {
+    const segmentProfits = {};
+
+    window.salesData.forEach(data => {
+        const date = new Date(data.Order_Date);
+        const year = date.getFullYear();
+        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
+            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+            const Segment = data.Segment;
+            const Profit = parseFloat(data.Profit);
+            if (!segmentProfits[Segment]) {
+                segmentProfits[Segment] = 0;
+            }
+            segmentProfits[Segment] += Profit;
+        }
+    });
+
+    const segmentProfitsArray = Object.entries(segmentProfits);
+
+    segmentProfitsArray.sort((a, b) => b[1] - a[1]);
+
+    const labels = segmentProfitsArray.map(item => item[0]);
+    const profits = segmentProfitsArray.map(item => item[1]);
+
+    window.segmentChart.data.labels = labels;
+    window.segmentChart.data.datasets[0].data = profits;
+    window.segmentChart.update();
+}
+
 
 function getMonthName(monthIndex) {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -672,52 +732,52 @@ function toggleDropdown() {
 
 // -------------------content 8------------------------
 
-fetch('dataset.json')
-    .then(response => response.json())
-    .then(data => {
+// fetch('dataset.json')
+//     .then(response => response.json())
+//     .then(data => {
         
-        const segmentProfits = data.reduce((acc, obj) => {
-            const Segment = obj.Segment;
-            const Profit = parseFloat(obj.Profit);
-            if (!acc[Segment]) {
-                acc[Segment] = 0;
-            }
-            acc[Segment] += Profit;
-            return acc;
-        }, {});
+//         const segmentProfits = data.reduce((acc, obj) => {
+//             const Segment = obj.Segment;
+//             const Profit = parseFloat(obj.Profit);
+//             if (!acc[Segment]) {
+//                 acc[Segment] = 0;
+//             }
+//             acc[Segment] += Profit;
+//             return acc;
+//         }, {});
 
         
-        const segmentProfitsArray = Object.entries(segmentProfits);
+//         const segmentProfitsArray = Object.entries(segmentProfits);
 
        
-        segmentProfitsArray.sort((a, b) => b[1] - a[1]);
+//         segmentProfitsArray.sort((a, b) => b[1] - a[1]);
 
         
-        const labels = segmentProfitsArray.map(item => item[0]);
-        const profits = segmentProfitsArray.map(item => item[1]);
+//         const labels = segmentProfitsArray.map(item => item[0]);
+//         const profits = segmentProfitsArray.map(item => item[1]);
 
         
-        const ctx = document.getElementById('barchartc8').getContext('2d');
-        const barchartc8 = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Profit',
-                    data: profits,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    })
-    .catch(error => console.error('Error fetching data:', error));
+//         const ctx = document.getElementById('barchartc8').getContext('2d');
+//         const barchartc8 = new Chart(ctx, {
+//             type: 'bar',
+//             data: {
+//                 labels: labels,
+//                 datasets: [{
+//                     label: 'Total Profit',
+//                     data: profits,
+//                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
+//                     borderColor: 'rgba(75, 192, 192, 1)',
+//                     borderWidth: 1
+//                 }]
+//             },
+//             options: {
+//                 scales: {
+//                     y: {
+//                         beginAtZero: true
+//                     }
+//                 }
+//             }
+//         });
+//     })
+//     .catch(error => console.error('Error fetching data:', error));
 
