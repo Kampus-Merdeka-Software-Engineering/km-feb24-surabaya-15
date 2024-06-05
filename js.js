@@ -59,6 +59,24 @@ window.onclick = function(event) {
   }
 }
 
+// ----------Dropdown Filter Year--------------
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdownButton = document.querySelector('.dropdown-button');
+    const dropdownContainer = document.querySelector('.dropdown-container-year');
+    
+    dropdownButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        dropdownContainer.classList.toggle('active');
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!dropdownContainer.contains(event.target)) {
+            dropdownContainer.classList.remove('active');
+        }
+    });
+});
+// ----------Dropdown Filter Year--------------
+
 // Bagian JS untuk Menu Dropdown State dan Datatable
 async function fetchData() {
     const response = await fetch('dataset.json'); 
@@ -157,6 +175,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     categoryCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', updateCharts);
     });
+
+    const submitButton = document.querySelector('.submit-button');
+    submitButton.addEventListener('click', updateCharts);
 
     initChart1(data);
     initChart2(data);
@@ -346,38 +367,45 @@ function updateCharts() {
     const selectedCategories = Array.from(document.querySelectorAll('#dropdownList input[type="checkbox"]:checked'))
                                .map(checkbox => checkbox.value);
 
-    updateLineChart(selectedStates, selectedYears, selectedCategories);
+    const startDateInput = document.getElementById('start-date').value;
+    const endDateInput = document.getElementById('end-date').value;
+    const startDate = startDateInput ? new Date(startDateInput) : null;
+    const endDate = endDateInput ? new Date(endDateInput) : null;
+                           
+    updateLineChart(selectedStates, startDate, endDate, selectedCategories);
     if (window.doughnutChart) {
-        updateDoughnutChart(selectedStates, selectedYears, selectedCategories);
+        updateDoughnutChart(selectedStates, startDate, endDate, selectedCategories);
     }
     if (window.barChart) {
-        updateBarChart(selectedStates, selectedYears, selectedCategories);
+        updateBarChart(selectedStates, startDate, endDate, selectedCategories);
     }
     if (window.cityChart) {
-        updateCityChart(selectedStates, selectedYears, selectedCategories);
+        updateCityChart(selectedStates, startDate, endDate, selectedCategories);
     }
     if (window.segmentChart) {
-        updateSegmentChart(selectedStates, selectedYears, selectedCategories);
+        updateSegmentChart(selectedStates, startDate, endDate, selectedCategories);
     }
 }
 
-function updateLineChart(selectedStates, selectedYears, selectedCategories) {
+function updateLineChart(selectedStates, startDate, endDate, selectedCategories) {
     const monthlySales = [];
     const monthYearLabels = [];
 
     window.salesData.forEach(data => {
         const date = new Date(data.Order_Date);
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
-            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+        if ((selectedStates.length === 0 || selectedStates.includes(data.State)) &&
+            (!startDate || date >= startDate) &&
+            (!endDate || date <= endDate) &&
+            (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
             const monthYear = `${getMonthName(month)} ${year}`;
             if (!monthYearLabels.includes(monthYear)) {
                 monthYearLabels.push(monthYear);
                 monthlySales.push(0);
             }
             const index = monthYearLabels.indexOf(monthYear);
-            monthlySales[index] += parseFloat(data.Sales); // Ensure Sales is treated as a number
+            monthlySales[index] += parseFloat(data.Sales);
         }
     });
 
@@ -386,14 +414,15 @@ function updateLineChart(selectedStates, selectedYears, selectedCategories) {
     window.myChart.update();
 }
 
-function updateDoughnutChart(selectedStates, selectedYears, selectedCategories) {
+function updateDoughnutChart(selectedStates, startDate, endDate, selectedCategories) {
     const categorySales = {};
 
     window.salesData.forEach(data => {
         const date = new Date(data.Order_Date);
-        const year = date.getFullYear();
-        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
-            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+        if ((selectedStates.length === 0 || selectedStates.includes(data.State)) &&
+            (!startDate || date >= startDate) &&
+            (!endDate || date <= endDate) &&
+            (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
             const Category = data.Category;
             const Sales = parseFloat(data.Sales);
             if (!categorySales[Category]) {
@@ -415,14 +444,16 @@ function updateDoughnutChart(selectedStates, selectedYears, selectedCategories) 
     window.doughnutChart.update();
 }
 
-function updateBarChart(selectedStates, selectedYears, selectedCategories) {
+
+function updateBarChart(selectedStates, startDate, endDate, selectedCategories) {
     const salesSubcategory = {};
 
     window.salesData.forEach(data => {
         const date = new Date(data.Order_Date);
-        const year = date.getFullYear();
-        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
-            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+        if ((selectedStates.length === 0 || selectedStates.includes(data.State)) &&
+            (!startDate || date >= startDate) &&
+            (!endDate || date <= endDate) &&
+            (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
             const Sub_Category = data.Sub_Category;
             const Sales = parseFloat(data.Sales);
             if (!salesSubcategory[Sub_Category]) {
@@ -444,14 +475,16 @@ function updateBarChart(selectedStates, selectedYears, selectedCategories) {
     window.barChart.update();
 }
 
-function updateCityChart(selectedStates, selectedYears, selectedCategories) {
+
+function updateCityChart(selectedStates, startDate, endDate, selectedCategories) {
     const citySales = {};
 
     window.salesData.forEach(data => {
         const date = new Date(data.Order_Date);
-        const year = date.getFullYear();
-        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
-            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+        if ((selectedStates.length === 0 || selectedStates.includes(data.State)) &&
+            (!startDate || date >= startDate) &&
+            (!endDate || date <= endDate) &&
+            (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
             const City = data.City;
             const Sales = parseFloat(data.Sales);
             if (!citySales[City]) {
@@ -475,14 +508,15 @@ function updateCityChart(selectedStates, selectedYears, selectedCategories) {
     window.cityChart.update();
 }
 
-function updateSegmentChart(selectedStates, selectedYears, selectedCategories) {
+function updateSegmentChart(selectedStates, startDate, endDate, selectedCategories) {
     const segmentProfits = {};
 
     window.salesData.forEach(data => {
         const date = new Date(data.Order_Date);
-        const year = date.getFullYear();
-        if (selectedStates.includes(data.State) && selectedYears.includes(year.toString()) 
-            && (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
+        if ((selectedStates.length === 0 || selectedStates.includes(data.State)) &&
+            (!startDate || date >= startDate) &&
+            (!endDate || date <= endDate) &&
+            (selectedCategories.length === 0 || selectedCategories.includes(data.Category))) {
             const Segment = data.Segment;
             const Profit = parseFloat(data.Profit);
             if (!segmentProfits[Segment]) {
@@ -503,7 +537,6 @@ function updateSegmentChart(selectedStates, selectedYears, selectedCategories) {
     window.segmentChart.data.datasets[0].data = profits;
     window.segmentChart.update();
 }
-
 
 function getMonthName(monthIndex) {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -781,3 +814,15 @@ function toggleDropdown() {
 //     })
 //     .catch(error => console.error('Error fetching data:', error));
 
+// Buat gabut doang
+function submitDates() {
+    var startDate = document.getElementById('start-date').value;
+    var endDate = document.getElementById('end-date').value;
+    
+    if (startDate && endDate) {
+        alert('Selected dates:\nStart: ' + startDate + '\nEnd: ' + endDate);
+        // You can also add any other actions you want to perform with the selected dates here.
+    } else {
+        alert('Please select both start and end dates.');
+    }
+}
