@@ -184,6 +184,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     initChart3(data);
     initChart4(data);
     initChart5(data);
+    updateTotals(data);
 });
 
 function initChart1(data) {
@@ -385,6 +386,7 @@ function updateCharts() {
     if (window.segmentChart) {
         updateSegmentChart(selectedStates, startDate, endDate, selectedCategories);
     }
+    updateTotals(window.salesData, selectedStates, startDate, endDate, selectedCategories);
 }
 
 function updateLineChart(selectedStates, startDate, endDate, selectedCategories) {
@@ -537,6 +539,29 @@ function updateSegmentChart(selectedStates, startDate, endDate, selectedCategori
     window.segmentChart.data.datasets[0].data = profits;
     window.segmentChart.update();
 }
+
+function updateTotals(data, selectedStates = [], startDate = null, endDate = null, selectedCategories = []) {
+    let totalSales = new Set();
+    let totalProfit = 0;
+    let totalCustomer = new Set();
+
+    data.forEach(item => {
+        const date = new Date(item.Order_Date);
+        if ((selectedStates.length === 0 || selectedStates.includes(item.State)) &&
+            (!startDate || date >= startDate) &&
+            (!endDate || date <= endDate) &&
+            (selectedCategories.length === 0 || selectedCategories.includes(item.Category))) {
+            totalSales.add(item.Row_ID);
+            totalProfit += parseFloat(item.Profit);
+            totalCustomer.add(item.Customer_ID);
+        }
+    });
+
+    document.getElementById('totalSales').textContent = totalSales.size;
+    document.getElementById('totalProfit').textContent = totalProfit.toLocaleString();
+    document.getElementById('totalCustomer').textContent = totalCustomer.size;
+}
+
 
 function getMonthName(monthIndex) {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -813,16 +838,3 @@ function toggleDropdown() {
 //         });
 //     })
 //     .catch(error => console.error('Error fetching data:', error));
-
-// Buat gabut doang
-function submitDates() {
-    var startDate = document.getElementById('start-date').value;
-    var endDate = document.getElementById('end-date').value;
-    
-    if (startDate && endDate) {
-        alert('Selected dates:\nStart: ' + startDate + '\nEnd: ' + endDate);
-        // You can also add any other actions you want to perform with the selected dates here.
-    } else {
-        alert('Please select both start and end dates.');
-    }
-}
