@@ -44,6 +44,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  flex-wrap: wrap;
 }
 
 /*----------Header + Navbar----------*/
@@ -64,6 +65,7 @@ h1 {
 
 nav {
   display: flex;
+  margin-right: 60px;
 }
 
 nav ul {
@@ -74,7 +76,7 @@ nav ul {
 }
 
 nav li {
-  margin-left: 10px;
+  margin: 0;
 }
 
 nav a {
@@ -98,15 +100,12 @@ nav a:hover {
 aside {
   background-color: white;
   padding: 1rem;
-  width: 25%;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: 210px;
 }
 
 .sidebarcontainer {
   position: fixed;
   top: 80px;
-  background: white;
   margin-top: 0.3rem;
   margin-right: 1rem;
   color: black;
@@ -140,24 +139,18 @@ aside {
   z-index: 1;
 }
 
-input[type="text"] {
-  padding: 5px;
-  margin: 10px;
-  display: inline-block;
-}
-
 button {
   padding: 5px;
   margin: 10px;
   display: inline-block;
-  width: 100%;
-}
-
-.searchbutton{
-  width: 60px;
+  width: 82%;
 }
 
 /*----------Main Content----------*/
+.container {
+  flex-wrap: wrap;
+}
+
 main {
   background-color: #fff;
   padding: 1rem;
@@ -224,46 +217,87 @@ footer {
   color: white;
   text-align: center;
   padding: 1rem;
+  width: 100%;
 }
 /* End footer */
 
 /* ------------------Responsif-------------------- */
-@media (max-width: 1200px) {
+@media all and (max-width: 1200px) {
+  header {
+    width: 100%;
+  }
+
+  .container {
+    flex-wrap: wrap;
+  }
+
+  nav {
+    margin-right: 60px;
+  }
+
   aside {
-    width: 20%;
+    margin: 0;
+  }
+
+  .sidebarcontainer {
+    position: fixed;
   }
 
   main {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:
-      "content1 content2"
-      "content3 content3"
-      "content4 content4"
-      "content5 content6"
-      "content7 content8";
+    "content1 content2 content3"
+    "content4 content4 content4"
+    "content5 content6 content6"
+    "content7 content7 content8"
+    "content9 content9 content9";
+    flex-wrap: wrap;
+  }
+
+  footer {
+    width: 125%;
   }
 }
 
-@media (max-width: 768px) {
+@media all and (max-width: 768px) {
+  .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
   .content-wrapper {
     flex-direction: column;
+  }
+
+  nav {
+    margin-left: 60px;
   }
 
   aside {
     width: 100%;
     order: 1;
-    height: auto; /* Ensure height adjusts to content */
+    height: auto;
   }
 
   .sidebarcontainer {
-     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    background: white;
   }
 
   main {
+    flex-wrap: wrap;
+    margin-left: 0px;
+    margin-top: 160px;
     order: 2;
-    grid-template-columns: 1fr;
+    grid-template-columns: 100vw;
     grid-template-areas:
       "content1"
       "content2"
@@ -272,11 +306,21 @@ footer {
       "content5"
       "content6"
       "content7"
-      "content8";
+      "content8"
+      "content9";
+  }
+
+  footer {
+    width: 100%;
+  }
+
+  .Statedropdown {
+    margin-top: 5px;
+    margin-left: 8px;
   }
 }
 
-@media (max-width: 480px) {
+@media all and (max-width: 480px) {
   header {
     text-align: center;
     flex-direction: column;
@@ -309,14 +353,16 @@ footer {
 .Statedropdown {
   position: relative;
   display: inline-block;
+  margin-left: 8px;
 }
 
 #StateSearch {
   box-sizing: border-box;
-  width: 100%;
+  width: 86%;
   padding: 8px;
   font-size: 16px;
   border: 1px solid #ccc;
+  margin-bottom: 10px;
 }
 
 .state-dropdown-content {
@@ -341,9 +387,9 @@ footer {
 }
 
 .show {
-  display: block; /* Show the content when open */
-  max-height: 300px; /* Set maximum height for scrolling */
-  overflow-y: auto; /* Enable vertical scroll */
+  display: block; 
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 
