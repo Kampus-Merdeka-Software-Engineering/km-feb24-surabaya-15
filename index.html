@@ -29,7 +29,6 @@
         <nav>
           <ul>
             <li><a href="https://www.kaggle.com/datasets/vivek468/superstore-dataset-final">About</a></li>
-            <!-- <li><a href="https://www.facebook.com">Contact</a></li> -->
           </ul>
         </nav>
       </header>
@@ -49,9 +48,9 @@
             <div class="Categorydropdown">
               <button class="categorydropbtn" onclick="toggleDropdown()">Category</button>
               <div class="category-dropdown-content" id="dropdownList">
-                <input type="checkbox" value="Technology" onclick="confirmSelection(event)" checked> Technology <br>
-                <input type="checkbox" value="Office Supplies" onclick="confirmSelection(event)" checked> Office Supplies <br>
-                <input type="checkbox" value="Furniture" onclick="confirmSelection(event)" checked> Furniture <br>
+                <input type="checkbox" value="Technology" checked> Technology <br>
+                <input type="checkbox" value="Office Supplies" checked> Office Supplies <br>
+                <input type="checkbox" value="Furniture" checked> Furniture <br>
               </div>
             </div>
             <br/>
@@ -84,12 +83,8 @@
             <span id="totalCustomer"></span>
         </div>
           <div class=" content content4">
-            <p># Total Monthly Sales From 2014-2017</p> 
-              <!-- <label><input type="checkbox" id="year2014" checked> 2014</label>
-              <label><input type="checkbox" id="year2015" checked> 2015</label>
-              <label><input type="checkbox" id="year2016" checked> 2016</label>
-              <label><input type="checkbox" id="year2017" checked> 2017</label> -->
-              <canvas id="myChart" width="400" height="200"></canvas>
+            <p># Total Monthly Sales From 2014-2017</p>
+            <canvas id="myChart" width="400" height="200"></canvas>
           </div>
           <div class=" content content5">
             <p># Sales by Category</p>
@@ -151,5 +146,3 @@
     <script src="js.js"></script>
 </body>
 </html>
-
-
